@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panduan Anggaran Gaji Interaktif</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals -->
+    <!-- Application Structure Plan: The SPA is designed with a user-centric approach, starting with a prominent interactive calculator for immediate personalization. The navigation allows for non-linear exploration of supporting educational content.
+    1. Header & Navigation: A sticky navigation bar for easy access to main sections: Kalkulator, Metode, Studi Kasus, Tips Cerdas, Utang, Dana Darurat, Takeaway. This enables quick jumps and enhances user flow.
+    2. Hero Section: An impactful introductory statement to engage users.
+    3. Kalkulator Anggaran Interaktif: The core interactive component. Users input their income and select a budgeting method, instantly visualizing allocation via a doughnut chart and dynamic text. This active engagement makes budgeting concepts tangible.
+    4. Metode Penganggaran: A tabbed interface presents different budgeting methods (50/30/20, Zero-Based, Envelope, Pay Yourself First, Priority-Based) with their pros and cons. This facilitates easy comparison.
+    5. Studi Kasus Dunia Nyata: A dynamic section where users can select various real-world scenarios (Fresh Graduate, Keluarga Muda, Freelancer, Pensiunan). A bar chart dynamically illustrates expense allocation for each case, accompanied by relevant descriptions and key tips.
+    6. Tips Cerdas & Strategi Praktis: Divided into "Strategi Menabung Efektif" and "Kebiasaan Belanja Cerdas" presented as clickable cards. This breaks down practical advice into digestible, engaging snippets.
+    7. Manajemen Utang: Details debt evaluation and compares Snowball vs. Avalanche methods using textual descriptions and a comparison table.
+    8. Pentingnya Dana Darurat: Explains the importance of emergency funds, ideal sizes based on life status (with a table), and strategies to build them.
+    9. Alat & Aplikasi Pendukung: Lists recommended tools with brief descriptions.
+    10. Tindakan Nyata yang Bisa Langsung Dilakukan: A final checklist summarizes key actionable takeaways.
+    This structure prioritizes active learning, personalization, and easy access to information, moving beyond the linear structure of a traditional e-book. -->
+    <!-- Visualization & Content Choices:
+    1. Budget Calculator (Kalkulator Anggaran):
+        - Report Info: 50/30/20 Rule, Zero-Based, Pay Yourself First.
+        - Goal: Inform & Personalize.
+        - Viz/Presentation: Interactive Doughnut Chart (Chart.js) + Dynamic Text Output.
+        - Interaction: User input (text field & slider for income), dropdown for method selection. "Hitung & Visualisasikan" button triggers chart and text updates.
+        - Justification: Provides instant, personalized feedback, making abstract budgeting concepts concrete and actionable.
+        - Library/Method: Chart.js for visualization, Vanilla JS for logic.
+    2. Metode Penganggaran:
+        - Report Info: Pros & Cons of 50/30/20, Zero-Based, Envelope, Pay Yourself First, Priority-Based.
+        - Goal: Compare & Inform.
+        - Viz/Presentation: Tabbed content layout (HTML/CSS/JS).
+        - Interaction: Clicking method buttons switches the displayed content.
+        - Justification: Allows easy side-by-side comparison of different budgeting approaches without excessive scrolling.
+        - Library/Method: Vanilla JS for tab switching.
+    3. Studi Kasus Dunia Nyata:
+        - Report Info: Examples for Fresh Graduate, Keluarga Muda, Freelancer, Pensiunan.
+        - Goal: Illustrate & Relate.
+        - Viz/Presentation: Bar Chart (Chart.js) + Descriptive Text.
+        - Interaction: Dropdown menu to select case study, which dynamically updates the chart and text.
+        - Justification: Makes data for different personas easily accessible and comparable, enhancing relatability and practical understanding.
+        - Library/Method: Chart.js for visualization, Vanilla JS for logic.
+    4. Tips Cerdas & Strategi Praktis:
+        - Report Info: Saving strategies, smart spending habits.
+        - Goal: Organize & Inform (Actionable).
+        - Viz/Presentation: Interactive Card Grid (HTML/Tailwind).
+        - Interaction: Hover effects on cards for visual appeal; content directly visible.
+        - Justification: Organizes many small pieces of information into a visually appealing, scannable, and actionable format.
+        - Library/Method: HTML/Tailwind CSS.
+    5. Debt Management (Utang):
+        - Report Info: Snowball vs. Avalanche methods, debt evaluation.
+        - Goal: Inform & Compare.
+        - Viz/Presentation: Textual descriptions and HTML table for comparison.
+        - Interaction: Static presentation of information.
+        - Justification: Clear and concise presentation for comparative understanding.
+        - Library/Method: HTML/Markdown.
+    6. Emergency Fund (Dana Darurat):
+        - Report Info: Ideal size by status, building strategies.
+        - Goal: Inform.
+        - Viz/Presentation: Textual explanations and HTML table for ideal sizes.
+        - Interaction: Static presentation.
+        - Justification: Structured data presentation for quick reference.
+        - Library/Method: HTML/Markdown.
+    7. Actionable Takeaways:
+        - Report Info: Checklist of key actions.
+        - Goal: Actionable Summary.
+        - Viz/Presentation: Simple checklist (HTML).
+        - Interaction: Static.
+        - Justification: Provides a quick, scannable summary of key steps for users.
+        - Library/Method: HTML/Markdown.
+    Confirming: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F9F5F0; /* Warm Neutral */
+            color: #4A4A4A;
+        }
+        .bg-primary { background-color: #F9F5F0; }
+        .bg-secondary { background-color: #FFFFFF; }
+        .bg-accent { background-color: #D4BFA9; } /* Subtle Accent */
+        .text-accent { color: #8C6A50; } /* Darker Accent for text */
+        .btn-primary {
+            background-color: #8C6A50;
+            color: #FFFFFF;
+            transition: background-color 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #6E543C;
+        }
+        .nav-link {
+            position: relative;
+            transition: color 0.3s ease;
+            color: #4A4A4A;
+        }
+        .nav-link:hover {
+            color: #8C6A50;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #8C6A50;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .card {
+            background-color: #FFFFFF;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.07), 0 4px 6px -4px rgba(0, 0, 0, 0.07);
+        }
+        .chart-container {
+            position: relative;
+            margin: auto;
+            height: 300px;
+            width: 100%;
+            max-width: 300px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+                max-width: 350px;
+            }
+        }
+        .accordion-header {
+            cursor: pointer;
+            padding: 1rem;
+            background-color: #F3F4F6;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.3s ease;
+        }
+        .accordion-header:hover {
+            background-color: #E5E7EB;
+        }
+        .accordion-content {
+            padding: 1rem;
+            background-color: #F9FAFB;
+            border-radius: 0.5rem;
+            margin-top: 0.5rem;
+            display: none; /* Hidden by default */
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+            max-height: 0;
+        }
+        .accordion-content.active {
+            max-height: 500px; /* Adjust as needed for content length */
+        }
+    </style>
+</head>
+<body class="bg-primary">
+
+    <header class="bg-secondary/80 backdrop-blur-sm sticky top-0 z-50 shadow-sm">
+        <nav class="container mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="text-2xl font-bold text-accent">
+                Digital<span class="text-gray-600">Signal</span>
+            </div>
+            <div class="hidden md:flex items-center space-x-8">
+                <a href="#kalkulator" class="nav-link font-medium">Kalkulator</a>
+                <a href="#metode" class="nav-link font-medium">Metode</a>
+                <a href="#studi-kasus" class="nav-link font-medium">Studi Kasus</a>
+                <a href="#tips" class="nav-link font-medium">Tips Cerdas</a>
+                <a href="#utang" class="nav-link font-medium">Utang</a>
+                <a href="#dana-darurat" class="nav-link font-medium">Dana Darurat</a>
+                <a href="#takeaways" class="nav-link font-medium">Tindakan Nyata</a>
+            </div>
+            <button id="mobile-menu-button" class="md:hidden focus:outline-none">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </nav>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="#kalkulator" class="block py-2 px-6 text-sm hover:bg-gray-200">Kalkulator</a>
+            <a href="#metode" class="block py-2 px-6 text-sm hover:bg-gray-200">Metode</a>
+            <a href="#studi-kasus" class="block py-2 px-6 text-sm hover:bg-gray-200">Studi Kasus</a>
+            <a href="#tips" class="block py-2 px-6 text-sm hover:bg-gray-200">Tips Cerdas</a>
+            <a href="#utang" class="block py-2 px-6 text-sm hover:bg-gray-200">Utang</a>
+            <a href="#dana-darurat" class="block py-2 px-6 text-sm hover:bg-gray-200">Dana Darurat</a>
+            <a href="#takeaways" class="block py-2 px-6 text-sm hover:bg-gray-200">Tindakan Nyata</a>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+        <section id="hero" class="text-center mb-16">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4 text-gray-800">Ubah Gaji Bulanan Menjadi Kunci Kebebasan Finansial Anda</h1>
+            <p class="text-lg text-gray-600 max-w-3xl mx-auto">Selamat datang di panduan interaktif Anda untuk menguasai anggaran. Mulai dari merencanakan, membandingkan metode, hingga mendapatkan tips praktis untuk mencapai tujuan finansial Anda.</p>
+        </section>
+
+        <section id="kalkulator" class="mb-20 scroll-mt-20">
+            <div class="card">
+                <h2 class="text-3xl font-bold text-center mb-2 text-accent">Kalkulator Anggaran Interaktif</h2>
+                <p class="text-center text-gray-600 mb-8">Masukkan penghasilan bersih bulanan Anda untuk melihat bagaimana metode anggaran populer dapat diterapkan. Alat ini membantu Anda memvisualisasikan alokasi dana secara langsung, memberikan titik awal yang praktis untuk rencana keuangan Anda.</p>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                    <div class="space-y-6">
+                        <div>
+                            <label for="income" class="block text-lg font-medium text-gray-700 mb-2">Penghasilan Bersih Bulanan (Rp)</label>
+                            <input type="text" id="income" class="w-full px-4 py-2 text-lg border-gray-300 rounded-md shadow-sm focus:ring-accent focus:border-accent" placeholder="Contoh: 10.000.000">
+                        </div>
+                        <div>
+                             <label for="income-slider" class="block text-sm font-medium text-gray-700">Atur dengan Slider</label>
+                             <input type="range" id="income-slider" min="1000000" max="50000000" step="100000" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer" style="accent-color: #8C6A50;">
+                        </div>
+                        <div>
+                            <label for="budget-method-selector" class="block text-lg font-medium text-gray-700 mb-2">Pilih Metode Anggaran</label>
+                            <select id="budget-method-selector" class="w-full px-4 py-2 text-lg border-gray-300 rounded-md shadow-sm focus:ring-accent focus:border-accent">
+                                <option value="50-30-20">Metode 50/30/20</option>
+                                <option value="zero-based">Zero-Based (Contoh)</option>
+                                <option value="pay-yourself-first">Pay Yourself First (Contoh)</option>
+                            </select>
+                        </div>
+                        <button id="calculate-btn" class="w-full btn-primary font-bold py-3 px-4 rounded-md text-lg">Hitung & Visualisasikan</button>
+                    </div>
+                    <div>
+                        <div class="chart-container mx-auto">
+                            <canvas id="budgetChart"></canvas>
+                        </div>
+                        <div id="budget-results" class="mt-6 text-center">
+                            <p class="text-gray-500">Hasil alokasi akan ditampilkan di sini.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="metode" class="mb-20 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-accent">Bandingkan Metode Penganggaran</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Setiap orang memiliki kondisi finansial dan gaya hidup yang unik. Tidak ada satu metode yang cocok untuk semua. Bagian ini menjelaskan beberapa pendekatan populer untuk membantu Anda menemukan yang paling sesuai, dari yang sederhana hingga yang lebih detail.</p>
+            <div class="flex justify-center mb-8 flex-wrap gap-2 md:gap-4">
+                 <button class="method-btn btn-primary px-4 py-2 rounded-md font-semibold" data-method="50-30-20">50/30/20</button>
+                 <button class="method-btn bg-secondary px-4 py-2 rounded-md font-semibold text-gray-700" data-method="zero-based">Zero-Based</button>
+                 <button class="method-btn bg-secondary px-4 py-2 rounded-md font-semibold text-gray-700" data-method="envelope">Sistem Amplop</button>
+                 <button class="method-btn bg-secondary px-4 py-2 rounded-md font-semibold text-gray-700" data-method="pay-yourself">Pay Yourself First</button>
+                 <button class="method-btn bg-secondary px-4 py-2 rounded-md font-semibold text-gray-700" data-method="priority">Priority-Based</button>
+            </div>
+            <div id="method-details" class="card">
+            </div>
+        </section>
+
+        <section id="studi-kasus" class="mb-20 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-accent">Studi Kasus Dunia Nyata</h2>
+             <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Teori adalah satu hal, tetapi aplikasi di dunia nyata bisa berbeda. Jelajahi bagaimana strategi penganggaran diterapkan pada berbagai tahap kehidupan, mulai dari lulusan baru hingga keluarga yang sedang berkembang, untuk mendapatkan wawasan praktis yang relevan.</p>
+            <div class="card">
+                <div class="mb-6">
+                    <label for="case-study-selector" class="block text-lg font-medium text-gray-700 mb-2">Pilih Skenario:</label>
+                    <select id="case-study-selector" class="w-full md:w-1/2 mx-auto block px-4 py-2 text-lg border-gray-300 rounded-md shadow-sm focus:ring-accent focus:border-accent">
+                        <option value="fresh-graduate">Fresh Graduate</option>
+                        <option value="keluarga-muda">Keluarga Muda</option>
+                        <option value="freelancer">Freelancer</option>
+                        <option value="pensiunan">Pensiunan</option>
+                    </select>
+                </div>
+                <div class="grid md:grid-cols-2 gap-8 items-center">
+                     <div>
+                        <div class="chart-container mx-auto" style="height:250px; max-width: 400px;">
+                             <canvas id="caseStudyChart"></canvas>
+                        </div>
+                    </div>
+                    <div id="case-study-details">
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="tips" class="mb-20 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-accent">Tips Cerdas & Strategi Praktis</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Sukses mengelola keuangan terletak pada kebiasaan sehari-hari. Temukan kumpulan tips praktis yang dapat langsung Anda terapkan untuk menghemat lebih banyak, membelanjakan uang dengan lebih bijak, dan membangun fondasi finansial yang kuat.</p>
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="card">
+                    <h3 class="font-bold text-xl mb-4 text-accent">💡 Strategi Menabung Efektif</h3>
+                    <ul class="space-y-3 list-disc list-inside text-gray-700">
+                        <li><strong>Otomatisasi Tabungan:</strong> Atur transfer otomatis ke rekening tabungan terpisah setiap awal bulan. Ini adalah cara "bayar diri sendiri dulu" yang paling efektif.</li>
+                        <li><strong>Tetapkan Tujuan Spesifik:</strong> Menabung untuk "dana darurat" atau "DP rumah" lebih memotivasi daripada menabung tanpa tujuan.</li>
+                        <li><strong>Manfaatkan Pendapatan Ekstra:</strong> Alokasikan bonus, THR, atau penghasilan tak terduga langsung ke tabungan atau investasi.</li>
+                        <li><strong>Mulai dari Kecil:</strong> Jangan remehkan kekuatan menabung kecil secara konsisten. Kebiasaan lebih penting daripada jumlah di awal.</li>
+                        <li><strong>Memisahkan Rekening Tabungan:</strong> Gunakan rekening terpisah khusus untuk tabungan agar tidak tergoda menggunakannya.</li>
+                        <li><strong>Mengenali Manfaat Jangka Panjang:</strong> Pahami bagaimana menabung berkontribusi pada dana darurat, pensiun, dan tujuan besar lainnya.</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h3 class="font-bold text-xl mb-4 text-accent">🛒 Kebiasaan Belanja Cerdas</h3>
+                    <ul class="space-y-3 list-disc list-inside text-gray-700">
+                        <li><strong>Aturan Tunda 3 Hari:</strong> Untuk pembelian non-esensial, tunggu 3 hari. Jika Anda masih menginginkannya, baru pertimbangkan untuk membeli. Ini efektif mencegah pembelian impulsif.</li>
+                        <li><strong>Masak di Rumah:</strong> Mengurangi frekuensi makan di luar atau pesan antar adalah salah satu cara tercepat memangkas pengeluaran besar.</li>
+                        <li><strong>Bandingkan Harga:</strong> Sebelum membeli, selalu cek harga di beberapa tempat. Manfaatkan situs atau aplikasi pembanding harga.</li>
+                        <li><strong>Audit Langganan:</strong> Cek langganan digital (streaming, aplikasi) Anda setiap beberapa bulan. Hentikan yang tidak lagi digunakan.</li>
+                        <li><strong>Hindari Belanja Impulsif:</strong> Kenali pemicu emosi Anda dan batasi akses ke situs belanja online.</li>
+                        <li><strong>Negosiasi Tagihan Bulanan:</strong> Optimalkan penggunaan listrik, air, dan internet. Hubungi penyedia untuk penawaran lebih baik.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <section id="utang" class="mb-20 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-accent">Manajemen Utang</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Utang dapat menjadi beban finansial yang signifikan jika tidak dikelola dengan baik. Bagian ini akan membahas cara memahami, mengelola, dan melunasi utang dengan strategi yang efektif, serta tips untuk menghindarinya di masa depan.</p>
+            <div class="card">
+                <h3 class="font-bold text-xl mb-4 text-accent">Mengevaluasi Jenis dan Prioritas Utang</h3>
+                <p class="text-gray-700 mb-4">Identifikasi semua utang yang dimiliki, termasuk jumlah total, suku bunga, dan tanggal jatuh tempo pembayaran. Prioritaskan pelunasan utang dengan bunga tertinggi terlebih dahulu (metode Avalanche) atau saldo terkecil (metode Snowball).</p>
+                
+                <h3 class="font-bold text-xl mt-6 mb-4 text-accent">Metode Pelunasan Utang: Snowball vs. Avalanche</h3>
+                <p class="text-gray-700 mb-4">Ada dua strategi utama untuk melunasi utang lebih cepat setelah pembayaran minimum pada semua utang telah dilakukan:</p>
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full text-left table-auto border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-3 px-4 border-b border-gray-200">Metode</th>
+                                <th class="py-3 px-4 border-b border-gray-200">Cara Kerja</th>
+                                <th class="py-3 px-4 border-b border-gray-200">Kelebihan</th>
+                                <th class="py-3 px-4 border-b border-gray-200">Kekurangan</th>
+                                <th class="py-3 px-4 border-b border-gray-200">Cocok Untuk Siapa</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-3 px-4 border-b border-gray-200"><strong>Snowball</strong></td>
+                                <td class="py-3 px-4 border-b border-gray-200">Melunasi utang dari saldo terkecil terlebih dahulu, lalu beralih ke yang lebih besar.</td>
+                                <td class="py-3 px-4 border-b border-gray-200">Memberikan motivasi psikologis karena melihat progres cepat.</td>
+                                <td class="py-3 px-4 border-b border-gray-200">Bisa lebih mahal dalam jangka panjang karena tidak memprioritaskan bunga tinggi.</td>
+                                <td class="py-3 px-4 border-b border-gray-200">Individu yang membutuhkan dorongan motivasi dan kemenangan cepat.</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 border-b border-gray-200"><strong>Avalanche</strong></td>
+                                <td class="py-3 px-4 border-b border-gray-200">Melunasi utang dengan bunga tertinggi terlebih dahulu, lalu beralih ke yang lebih rendah.</td>
+                                <td class="py-3 px-4 border-b border-gray-200">Menghemat uang paling banyak dalam jangka panjang karena mengurangi total bunga.</td>
+                                <td class="py-3 px-4 border-b border-gray-200">Mungkin lebih sulit mempertahankan motivasi jika utang bunga tertinggi juga bersaldo besar.</td>
+                                <td class="py-3 px-4 border-b border-gray-200">Individu yang fokus pada efisiensi matematis dan ingin meminimalkan biaya bunga total.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="font-bold text-xl mt-6 mb-4 text-accent">Tips Menghindari Utang yang Tidak Perlu</h3>
+                <ul class="space-y-2 list-disc list-inside text-gray-700">
+                    <li>Pisahkan Kebutuhan dan Keinginan.</li>
+                    <li>Hidup Hemat dan Tidak Konsumtif.</li>
+                    <li>Usahakan Ada Pendapatan yang Ditabung.</li>
+                    <li>Catat Semua Pemasukan dan Pengeluaran.</li>
+                    <li>Cari Penghasilan Tambahan jika memungkinkan.</li>
+                    <li>Bijak Menggunakan Kartu Kredit dan Paylater: Gunakan hanya untuk kebutuhan mendesak dan lunasi penuh setiap bulan.</li>
+                    <li>Berkomitmen untuk Tidak Memiliki Utang.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="dana-darurat" class="mb-20 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-accent">Pentingnya Dana Darurat</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Dana darurat adalah salah satu komponen terpenting dalam perencanaan keuangan pribadi. Ini adalah simpanan khusus yang dipersiapkan untuk mengantisipasi kebutuhan tidak terduga di masa depan.</p>
+            <div class="card">
+                <h3 class="font-bold text-xl mb-4 text-accent">Apa Itu Dana Darurat dan Mengapa Penting?</h3>
+                <p class="text-gray-700 mb-4">Dana darurat berfungsi sebagai jaring pengaman finansial untuk menutupi pengeluaran atau memenuhi kebutuhan dasar ketika tidak ada pemasukan (misalnya, kehilangan pekerjaan, sakit mendadak, bencana alam). Ini mencegah Anda dari keharusan mengambil utang saat menghadapi kebutuhan mendesak.</p>
+                
+                <h3 class="font-bold text-xl mt-6 mb-4 text-accent">Ukuran Ideal Dana Darurat Berdasarkan Kondisi</h3>
+                <p class="text-gray-700 mb-4">Jumlah ideal bervariasi tergantung pada kondisi pribadi dan jumlah tanggungan, dihitung berdasarkan kelipatan dari total pengeluaran rutin bulanan (hanya kebutuhan dasar).</p>
+                <div class="overflow-x-auto mb-6">
+                    <table class="w-full text-left table-auto border-collapse">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-3 px-4 border-b border-gray-200">Status Keuangan</th>
+                                <th class="py-3 px-4 border-b border-gray-200">Rekomendasi Jumlah</th>
+                                <th class="py-3 px-4 border-b border-gray-200">Contoh Perhitungan (Asumsi Pengeluaran Bulanan Rp5.000.000)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="py-3 px-4 border-b border-gray-200">Lajang</td>
+                                <td class="py-3 px-4 border-b border-gray-200">3-6 kali pengeluaran bulanan</td>
+                                <td class="py-3 px-4 border-b border-gray-200">Rp15.000.000 - Rp30.000.000</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 border-b border-gray-200">Menikah tanpa anak</td>
+                                <td class="py-3 px-4 border-b border-gray-200">6 kali pengeluaran bulanan</td>
+                                <td class="py-3 px-4 border-b border-gray-200">Rp30.000.000</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 border-b border-gray-200">Menikah dengan 1 anak</td>
+                                <td class="py-3 px-4 border-b border-gray-200">9 kali pengeluaran bulanan</td>
+                                <td class="py-3 px-4 border-b border-gray-200">Rp45.000.000</td>
+                            </tr>
+                            <tr>
+                                <td class="py-3 px-4 border-b border-gray-200">Menikah dengan 2 anak</td>
+                                <td class="py-3 px-4 border-b border-gray-200">12 kali pengeluaran bulanan</td>
+                                <td class="py-3 px-4 border-b border-gray-200">Rp60.000.000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <h3 class="font-bold text-xl mt-6 mb-4 text-accent">Strategi Membangun Dana Darurat Secara Bertahap</h3>
+                <ul class="space-y-2 list-disc list-inside text-gray-700">
+                    <li>Mulai dari Langkah Kecil, fokus pada konsistensi.</li>
+                    <li>Sisihkan Sejak Awal dari setiap penghasilan.</li>
+                    <li>Alokasikan Pemasukan Ekstra (bonus, THR) ke dana darurat.</li>
+                    <li>Kurangi Pengeluaran dan alihkan dana hasil penghematan.</li>
+                    <li>Otomatisasi Transfer ke rekening khusus dana darurat.</li>
+                    <li>Disiplin adalah kunci.</li>
+                </ul>
+                <h3 class="font-bold text-xl mt-6 mb-4 text-accent">Tempat Menyimpan Dana Darurat</h3>
+                <p class="text-gray-700 mb-2">Simpan di tempat yang mudah diakses dan cepat dicairkan:</p>
+                <ul class="space-y-2 list-disc list-inside text-gray-700">
+                    <li>Tabungan Biasa (rekening terpisah).</li>
+                    <li>Deposito (tenor singkat).</li>
+                    <li>Reksa Dana Pasar Uang.</li>
+                    <li>Emas (pertimbangkan likuiditas).</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="aplikasi" class="mb-20 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-accent">Alat & Aplikasi Pendukung</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Di era digital ini, berbagai alat dan aplikasi dapat mempermudah proses penganggaran, menjadikannya lebih efisien dan akurat.</p>
+            <div class="card">
+                <h3 class="font-bold text-xl mb-4 text-accent">Spreadsheet (Excel/Google Sheets)</h3>
+                <p class="text-gray-700 mb-4">Alat fleksibel untuk mencatat anggaran secara manual. Banyak template gratis tersedia dan mudah disesuaikan. Membutuhkan input manual tetapi menawarkan transparansi penuh.</p>
+                
+                <h3 class="font-bold text-xl mt-6 mb-4 text-accent">Aplikasi Pengelola Keuangan Pribadi (Gratis & Berbayar)</h3>
+                <p class="text-gray-700 mb-2">Solusi populer untuk pencatatan otomatis, pemantauan pemasukan, dan pengingat tagihan. Meningkatkan disiplin finansial dan menghemat waktu.</p>
+                <p class="font-semibold text-gray-700 mb-2">Rekomendasi Aplikasi:</p>
+                <ul class="space-y-2 list-disc list-inside text-gray-700">
+                    <li><strong>Mint:</strong> Pelacakan pengeluaran otomatis, pengingat tagihan, integrasi rekening bank.</li>
+                    <li><strong>YNAB (You Need A Budget):</strong> Fokus pada perencanaan anggaran berbasis tujuan.</li>
+                    <li><strong>PocketGuard:</strong> Menunjukkan uang yang benar-benar bisa digunakan setelah kebutuhan utama.</li>
+                    <li><strong>Goodbudget:</strong> Sistem amplop digital, cocok untuk keluarga.</li>
+                    <li><strong>Spendee:</strong> Pelacakan multi-akun, desain visual menarik, Smart Budget.</li>
+                    <li><strong>Money Lover:</strong> Personalisasi, dapat dihubungkan ke bank.</li>
+                    <li><strong>Monefy:</strong> Sederhana dan cepat untuk pelacakan pribadi.</li>
+                    <li><strong>Finansialku:</strong> Platform perencanaan keuangan komprehensif.</li>
+                    <li><strong>GnuCash:</strong> Perangkat lunak akuntansi desktop open-source.</li>
+                    <li><strong>Aplikasi Mobile Banking & Dompet Digital:</strong> Banyak bank (seperti Jenius dengan fitur *Dream Saver*) dan penyedia dompet digital (GoPay, DANA, OVO, Pluang) menawarkan fitur tabungan dan pengelolaan keuangan terintegrasi yang memudahkan transaksi dan pemantauan.</li>
+                </ul>
+            </div>
+        </section>
+
+        <section id="takeaways" class="mb-20 scroll-mt-20">
+            <h2 class="text-3xl font-bold text-center mb-2 text-accent">Tindakan Nyata yang Bisa Langsung Dilakukan</h2>
+            <p class="text-center text-gray-600 mb-8 max-w-3xl mx-auto">Mengelola gaji bulanan adalah perjalanan, bukan tujuan akhir. Langkah-langkah kecil yang konsisten akan membawa seseorang menuju kesehatan finansial yang lebih baik.</p>
+            <div class="card">
+                <ul class="space-y-4 text-gray-700">
+                    <li><strong class="text-accent">&#10003; Tentukan Tujuan Keuangan Anda:</strong> Tulis 1-3 tujuan finansial spesifik dan terukur (misal, "menabung Rp10 juta untuk dana darurat dalam 6 bulan").</li>
+                    <li><strong class="text-accent">&#10003; Catat Semua Pendapatan dan Pengeluaran Anda:</strong> Selama satu bulan penuh, catat setiap rupiah yang masuk dan keluar. Gunakan buku catatan, *spreadsheet* sederhana (seperti template gratis dari Microsoft Excel atau Google Sheets), atau aplikasi pengelola keuangan. Ini akan memberikan gambaran nyata tentang arus kas Anda.</li>
+                    <li><strong class="text-accent">&#10003; Bedakan Kebutuhan dan Keinginan:</strong> Saat mencatat pengeluaran, kategorikan setiap item sebagai "kebutuhan" atau "keinginan". Latih diri untuk selalu mempertanyakan apakah suatu pengeluaran benar-benar esensial.</li>
+                    <li><strong class="text-accent">&#10003; Pilih Satu Metode Penganggaran:</strong> Berdasarkan pemahaman tentang diri dan kondisi finansial, pilih salah satu metode penganggaran yang paling menarik bagi Anda (misalnya, 50/30/20 untuk pemula, atau *Pay Yourself First* jika sulit menabung). Komitmen untuk mencoba satu metode selama minimal 1-2 bulan.</li>
+                    <li><strong class="text-accent">&#10003; Otomatiskan Tabungan Anda:</strong> Segera setelah menerima gaji, atur transfer otomatis (*autodebet*) sejumlah tertentu ke rekening tabungan terpisah. Mulailah dengan jumlah kecil jika perlu, yang terpenting adalah konsistensi.</li>
+                    <li><strong class="text-accent">&#10003; Mulai Bangun Dana Darurat:</strong> Hitung target dana darurat ideal Anda berdasarkan status dan pengeluaran bulanan (lihat Tabel 7.1). Mulailah menyisihkan dana secara bertahap ke rekening terpisah yang mudah diakses.</li>
+                    <li><strong class="text-accent">&#10003; Tinjau Pengeluaran Rutin yang Tidak Perlu:</strong> Periksa langganan bulanan (aplikasi *streaming*, *gym*) yang mungkin tidak lagi digunakan atau terlalu sering makan di luar. Cari area di mana pengeluaran dapat dipangkas dan alihkan dana tersebut ke tabungan atau pelunasan utang.</li>
+                    <li><strong class="text-accent">&#10003; Pelajari Lebih Lanjut dan Beradaptasi:</strong> Dunia finansial terus berubah. Teruslah belajar tentang investasi, manajemen utang, dan strategi keuangan lainnya. Yang terpenting, bersikaplah fleksibel dan siap menyesuaikan anggaran seiring perubahan hidup dan tujuan finansial Anda.</li>
+                </ul>
+            </div>
+        </section>
+    </main>
+    
+    <footer class="bg-secondary mt-20">
+        <div class="container mx-auto px-6 py-8 text-center text-gray-600">
+            <p>&copy; 2025 DigitalSignal. Your digital buddy to smarter money habits.</p>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Smooth scrolling for navigation links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                    // Close mobile menu if open
+                    if (!mobileMenu.classList.contains('hidden')) {
+                        mobileMenu.classList.add('hidden');
+                    }
+                });
+            });
+
+            // Mobile menu toggle
+            const mobileMenuButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenuButton.addEventListener('click', () => {
+                mobileMenu.classList.toggle('hidden');
+            });
+
+            // Budget Calculator elements
+            const incomeInput = document.getElementById('income');
+            const incomeSlider = document.getElementById('income-slider');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const budgetMethodSelector = document.getElementById('budget-method-selector');
+            const budgetResultsDiv = document.getElementById('budget-results');
+            const budgetChartCanvas = document.getElementById('budgetChart');
+            let budgetChart;
+
+            // Currency formatter
+            const formatCurrency = (value) => {
+                if (isNaN(value)) return "Rp0";
+                return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(value);
+            };
+
+            // Sync income input and slider
+            incomeInput.addEventListener('input', (e) => {
+                let value = e.target.value.replace(/[^0-9]/g, '');
+                incomeSlider.value = value;
+                e.target.value = value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            });
+            
+            incomeSlider.addEventListener('input', (e) => {
+                incomeInput.value = e.target.value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+            });
+
+            // Data for budgeting methods comparison section
+            const methodData = {
+                "50-30-20": {
+                    title: "Metode 50/30/20",
+                    description: "Metode ini membagi penghasilan bersih menjadi tiga kategori besar: 50% untuk Kebutuhan, 30% untuk Keinginan, dan 20% untuk Tabungan/Investasi. Sangat cocok untuk pemula karena sederhana dan fleksibel.",
+                    pros: ["Mudah dipahami dan diterapkan.", "Memberikan keseimbangan antara kebutuhan, gaya hidup, dan masa depan.", "Fleksibel untuk disesuaikan."],
+                    cons: ["Mungkin terlalu sederhana jika memiliki banyak utang kompleks.", "Persentase bisa jadi tidak realistis untuk semua tingkat pendapatan."]
+                },
+                "zero-based": {
+                    title: "Zero-Based Budgeting (Anggaran Berbasis Nol)",
+                    description: "Dengan metode ini, setiap rupiah dari pendapatan Anda diberi 'tugas' atau tujuan. Rumusnya: Pendapatan - Pengeluaran = 0. Ini memaksa Anda untuk secara sadar mengalokasikan semua uang Anda.",
+                    pros: ["Memberikan kontrol penuh atas keuangan.", "Sangat efektif untuk mengidentifikasi dan menghilangkan pemborosan.", "Mendorong penetapan prioritas yang jelas."],
+                    cons: ["Membutuhkan waktu dan usaha lebih untuk melacak setiap pengeluaran.", "Bisa menjadi rumit jika pendapatan tidak stabil."]
+                },
+                "envelope": {
+                    title: "Sistem Amplop (Envelope System)",
+                    description: "Metode tunai klasik yang diadaptasi secara digital. Anda mengalokasikan anggaran untuk setiap kategori pengeluaran (misal: belanjaan, transportasi) dan hanya boleh menggunakan uang dari 'amplop' tersebut.",
+                    pros: ["Sangat efektif mencegah pengeluaran berlebihan.", "Meningkatkan kesadaran akan kebiasaan belanja.", "Membantu memutus siklus utang kartu kredit."],
+                    cons: ["Kurang praktis di era digital/cashless.", "Membutuhkan disiplin tinggi untuk tidak 'meminjam' dari amplop lain."]
+                },
+                "pay-yourself": {
+                    title: "Pay Yourself First (Bayar Diri Sendiri Dulu)",
+                    description: "Prinsipnya sederhana: prioritaskan menabung dan berinvestasi SEBELUM Anda membayar tagihan atau pengeluaran lainnya. Alokasikan persentase tertentu dari gaji (misal: 10-20%) langsung ke rekening tabungan/investasi.",
+                    pros: ["Memastikan tujuan tabungan tercapai secara konsisten.", "Sederhana dan mudah diotomatisasi.", "Mengurangi stres dalam mengelola sisa uang."],
+                    cons: ["Tidak memberikan panduan detail untuk mengelola sisa pengeluaran.", "Membutuhkan disiplin untuk tidak menyentuh tabungan."]
+                },
+                "priority": {
+                    title: "Metode Penganggaran Berdasarkan Prioritas",
+                    description: "Metode ini mengharuskan seseorang untuk mengurutkan semua pengeluaran berdasarkan tingkat kepentingannya dan mengalokasikan dana sesuai dengan prioritas tersebut.",
+                    pros: ["Memastikan kebutuhan yang paling mendesak selalu terpenuhi.", "Membantu mengurangi pembelian impulsif.", "Memberikan kerangka kerja yang jelas untuk alokasi dana."],
+                    cons: ["Memerlukan tingkat disiplin yang tinggi.", "Membutuhkan tujuan keuangan yang sangat jelas.", "Konsistensi dalam mengikuti rencana adalah kunci."]
+                }
+            };
+
+            // Function to update the method details section
+            const updateMethodDetails = (methodKey) => {
+                const data = methodData[methodKey];
+                const detailsDiv = document.getElementById('method-details');
+                detailsDiv.innerHTML = `
+                    <h3 class="text-2xl font-bold mb-3 text-accent">${data.title}</h3>
+                    <p class="mb-4 text-gray-600">${data.description}</p>
+                    <div class="grid md:grid-cols-2 gap-6">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2 text-green-600">Kelebihan:</h4>
+                            <ul class="list-disc list-inside space-y-1 text-gray-700">
+                                ${data.pros.map(pro => `<li>${pro}</li>`).join('')}
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2 text-red-600">Kekurangan:</h4>
+                            <ul class="list-disc list-inside space-y-1 text-gray-700">
+                                ${data.cons.map(con => `<li>${con}</li>`).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                `;
+            };
+
+            // Event listeners for method selection buttons
+            const methodBtns = document.querySelectorAll('.method-btn');
+            methodBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    methodBtns.forEach(b => {
+                        b.classList.replace('btn-primary', 'bg-secondary');
+                        b.classList.add('text-gray-700');
+                    });
+                    btn.classList.add('btn-primary');
+                    btn.classList.remove('bg-secondary', 'text-gray-700');
+                    updateMethodDetails(btn.dataset.method);
+                });
+            });
+
+            // Function to create or update Chart.js instances
+            const createOrUpdateChart = (canvasId, type, labels, data, colors, title) => {
+                const ctx = document.getElementById(canvasId).getContext('2d');
+                let chartInstance = Chart.getChart(canvasId);
+                if (chartInstance) {
+                    chartInstance.destroy();
+                }
+                
+                return new Chart(ctx, {
+                    type: type,
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            data: data,
+                            backgroundColor: colors,
+                            borderColor: '#F9F5F0',
+                            borderWidth: 2
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    font: {
+                                        size: 12
+                                    },
+                                    boxWidth: 20
+                                }
+                            },
+                            title: {
+                                display: title ? true : false,
+                                text: title,
+                                font: {
+                                    size: 16,
+                                    weight: 'bold'
+                                }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        let label = context.label || '';
+                                        if (label) {
+                                            label += ': ';
+                                        }
+                                        if (context.parsed !== null) {
+                                            label += formatCurrency(context.parsed);
+                                        }
+                                        return label;
+                                    }
+                                }
+                            }
+                        },
+                        scales: type === 'bar' ? {
+                            x: {
+                                ticks: {
+                                    callback: function(value) {
+                                        // Wrap long labels
+                                        let label = this.getLabelForValue(value);
+                                        if (label.length > 16) { // Adjust threshold as needed
+                                            return label.split(' ').map((word, index, arr) => {
+                                                if (index === arr.length - 1 && word.length > 8) {
+                                                    return word.substring(0, 8) + '...'; // Truncate last word if too long
+                                                }
+                                                return word;
+                                            });
+                                        }
+                                        return label;
+                                    }
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    callback: function(value) {
+                                        return formatCurrency(value);
+                                    }
+                                }
+                            }
+                        } : {},
+                    }
+                });
+            };
+
+            // Logic for budget calculator
+            const calculateBudget = () => {
+                const incomeStr = incomeInput.value.replace(/\./g, '');
+                const income = parseFloat(incomeStr);
+
+                if (isNaN(income) || income <= 0) {
+                    budgetResultsDiv.innerHTML = '<p class="text-red-500">Silakan masukkan jumlah penghasilan yang valid.</p>';
+                    // Destroy chart if invalid input
+                    if (budgetChart) {
+                        budgetChart.destroy();
+                    }
+                    return;
+                }
+
+                const selectedMethod = budgetMethodSelector.value;
+                let labels, data, colors, resultsHTML;
+
+                switch (selectedMethod) {
+                    case 'zero-based':
+                        labels = ['Cicilan Rumah', 'Makan', 'Transportasi', 'Tabungan', 'Hiburan', 'Lain-lain'];
+                        // Ensure total is 100% and example values are reasonable
+                        data = [income * 0.25, income * 0.20, income * 0.10, income * 0.20, income * 0.15, income * 0.10];
+                        colors = ['#8C6A50', '#A88C76', '#C4AD9D', '#5E4A3A', '#D4BFA9', '#BDB7AC'];
+                        resultsHTML = `
+                            <h3 class="font-bold text-xl mb-2">Contoh Alokasi Zero-Based</h3>
+                            <p class="text-gray-600">Setiap rupiah dialokasikan ke pos pengeluaran spesifik.</p>
+                            <ul class="mt-2 text-left w-fit mx-auto">
+                                <li><strong>Cicilan Rumah (25%):</strong> ${formatCurrency(data[0])}</li>
+                                <li><strong>Makan (20%):</strong> ${formatCurrency(data[1])}</li>
+                                <li><strong>Transportasi (10%):</strong> ${formatCurrency(data[2])}</li>
+                                <li><strong>Tabungan (20%):</strong> ${formatCurrency(data[3])}</li>
+                                <li><strong>Hiburan (15%):</strong> ${formatCurrency(data[4])}</li>
+                                <li><strong>Lain-lain (10%):</strong> ${formatCurrency(data[5])}</li>
+                            </ul>`;
+                        break;
+                    case 'pay-yourself-first':
+                        labels = ['Tabungan & Investasi', 'Sisa untuk Pengeluaran'];
+                        data = [income * 0.20, income * 0.80]; // 20% for saving
+                        colors = ['#5E4A3A', '#D4BFA9'];
+                        resultsHTML = `
+                            <h3 class="font-bold text-xl mb-2">Contoh Alokasi Pay Yourself First</h3>
+                             <p class="text-gray-600">Prioritaskan tabungan, sisa uang bebas untuk dikelola.</p>
+                            <ul class="mt-2 text-left w-fit mx-auto">
+                                <li><strong>Tabungan & Investasi (20%):</strong> ${formatCurrency(data[0])}</li>
+                                <li><strong>Sisa untuk Kebutuhan & Keinginan (80%):</strong> ${formatCurrency(data[1])}</li>
+                            </ul>`;
+                        break;
+                    case '50-30-20':
+                    default:
+                        labels = ['Kebutuhan (50%)', 'Keinginan (30%)', 'Tabungan (20%)'];
+                        data = [income * 0.5, income * 0.3, income * 0.2];
+                        colors = ['#8C6A50', '#C4AD9D', '#5E4A3A'];
+                        resultsHTML = `
+                            <h3 class="font-bold text-xl mb-2">Hasil Alokasi 50/30/20</h3>
+                             <p class="text-gray-600">Berikut rincian alokasi berdasarkan penghasilan Anda.</p>
+                             <ul class="mt-2 text-left w-fit mx-auto">
+                                <li><strong>Kebutuhan (50%):</strong> ${formatCurrency(data[0])}</li>
+                                <li><strong>Keinginan (30%):</strong> ${formatCurrency(data[1])}</li>
+                                <li><strong>Tabungan & Investasi (20%):</strong> ${formatCurrency(data[2])}</li>
+                            </ul>`;
+                        break;
+                }
+                budgetResultsDiv.innerHTML = resultsHTML;
+                budgetChart = createOrUpdateChart('budgetChart', 'doughnut', labels, data, colors);
+            };
+            
+            calculateBtn.addEventListener('click', calculateBudget);
+
+            // Case Study Data
+            const caseStudyData = {
+                "fresh-graduate": {
+                    title: "Studi Kasus: Fresh Graduate",
+                    description: "Seorang lulusan baru dengan gaji pertama Rp 5.000.000. Fokus utama adalah membangun dana darurat dan kebiasaan menabung sambil tetap menikmati hidup.",
+                    chartData: {
+                        labels: ['Sewa Kos', 'Makan', 'Transportasi', 'Hiburan', 'Tabungan'],
+                        data: [1200000, 1300000, 500000, 1000000, 1000000], // Total 5jt
+                        colors: ['#8C6A50', '#A88C76', '#C4AD9D', '#E1D4C4', '#5E4A3A'],
+                    },
+                    tips: "Otomatiskan transfer Rp 1.000.000 ke rekening tabungan terpisah di awal bulan. Gunakan aplikasi pencatat pengeluaran untuk memantau pos 'Hiburan' agar tidak berlebihan."
+                },
+                "keluarga-muda": {
+                    title: "Studi Kasus: Keluarga Muda",
+                    description: "Pasangan dengan 1 anak dan total pendapatan Rp 15.000.000. Prioritas adalah cicilan rumah, biaya anak, dan dana pendidikan.",
+                     chartData: {
+                        labels: ['Cicilan Rumah', 'Kebutuhan Anak', 'Belanja Bulanan', 'Transportasi', 'Tabungan/Investasi'],
+                        data: [4500000, 2500000, 3000000, 2000000, 3000000], // Total 15jt
+                        colors: ['#8C6A50', '#A88C76', '#C4AD9D', '#E1D4C4', '#5E4A3A'],
+                    },
+                    tips: "Buat anggaran bersama dan tinjau setiap bulan. Prioritaskan dana pendidikan anak dalam pos 'Tabungan/Investasi'. Cari cara menghemat pada pos 'Belanja Bulanan' dengan memasak."
+                },
+                "freelancer": {
+                    title: "Studi Kasus: Freelancer",
+                    description: "Seorang freelancer dengan pendapatan tidak tetap, rata-rata Rp 8.000.000/bulan. Kunci utamanya adalah membangun dana darurat yang besar dan mengelola arus kas.",
+                    chartData: {
+                        labels: ['Kebutuhan Pokok', 'Operasional Kerja', 'Dana Darurat', 'Investasi', 'Gaya Hidup Fleksibel'],
+                        data: [3000000, 1000000, 2000000, 1000000, 1000000], // Total 8jt
+                        colors: ['#8C6A50', '#A88C76', '#C4AD9D', '#E1D4C4', '#5E4A3A'],
+                    },
+                    tips: "Gunakan pendapatan terendah sebagai basis anggaran. Saat pendapatan tinggi, alokasikan kelebihan dana ke dana darurat atau investasi. Pisahkan rekening pribadi dan bisnis."
+                },
+                "pensiunan": {
+                    title: "Studi Kasus: Pensiunan",
+                    description: "Seorang pensiunan dengan dana terbatas yang perlu dikelola untuk keberlanjutan hidup dan kesehatan di masa tua, dengan estimasi pengeluaran bulanan Rp 5.000.000.",
+                    chartData: {
+                        labels: ['Kebutuhan Pokok', 'Biaya Kesehatan', 'Sosial/Hobi', 'Dana Darurat', 'Lain-lain'],
+                        data: [2500000, 1500000, 500000, 300000, 200000], // Total 5jt
+                        colors: ['#8C6A50', '#A88C76', '#C4AD9D', '#E1D4C4', '#5E4A3A'],
+                    },
+                    tips: "Fokus pada pengeluaran esensial dan biaya kesehatan. Evaluasi dana pensiun secara berkala dan konsultasi dengan ahli keuangan. Manfaatkan diskon lansia jika ada."
+                }
+            };
+            
+            let caseStudyChart;
+            const caseStudySelector = document.getElementById('case-study-selector');
+            const caseStudyDetailsDiv = document.getElementById('case-study-details');
+
+            // Function to update case study section
+            const updateCaseStudy = () => {
+                const selectedCase = caseStudySelector.value;
+                const data = caseStudyData[selectedCase];
+
+                caseStudyDetailsDiv.innerHTML = `
+                    <h3 class="text-2xl font-bold mb-3 text-accent">${data.title}</h3>
+                    <p class="mb-4 text-gray-600">${data.description}</p>
+                    <div class="bg-amber-50 border-l-4 border-amber-400 p-4 rounded-r-lg">
+                        <p class="font-semibold">Tips Kunci:</p>
+                        <p class="text-gray-700">${data.tips}</p>
+                    </div>
+                `;
+                
+                caseStudyChart = createOrUpdateChart(
+                    'caseStudyChart', 
+                    'bar',
+                    data.chartData.labels,
+                    data.chartData.data, 
+                    data.chartData.colors,
+                    'Contoh Alokasi Pengeluaran'
+                );
+                // Hide legend for bar chart in case study for cleaner look
+                caseStudyChart.options.plugins.legend.display = false;
+            };
+
+            caseStudySelector.addEventListener('change', updateCaseStudy);
+
+            // Initial calls to populate sections on load
+            updateMethodDetails('50-30-20');
+            updateCaseStudy();
+            calculateBudget(); // Initialize budget calculator with default values
+        });
+    </script>
+</body>
+</html>
